@@ -12,29 +12,25 @@ db.init_app(app)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = 'login'  # Перенаправление на страницу входа, если не аутентифицирован
+login_manager.login_view = 'login'
 
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-# 📌 Регистрация админа (один раз в консоли)
-@app.before_first_request
-def create_admin():
-    db.create_all()  # Создаём таблицы
+# Создаём таблицы и админа при запуске приложения
+with app.app_context():
+    db.create_all()
     if not User.query.filter_by(username="admin").first():
-        admin = User(username="admin")
-        admin.set_password("admin_password")  # Устанавливаем хэшированный пароль
+        admin = User(username="admin", password=generate_password_hash("admin_password"))
         db.session.add(admin)
         db.session.commit()
 
-# 🏠 Главная страница (показываем контакты)
 @app.route('/')
 def index():
     contacts = Contact.query.all()
     return render_template('index.html', contacts=contacts)
 
-# ➕ Добавление контакта (только для админа)
 @app.route('/add', methods=['GET', 'POST'])
 @login_required
 def add_contact():
@@ -43,11 +39,11 @@ def add_contact():
         phone = request.form['phone']
         address = request.form['address']
         new_contact = Contact(name=name, phone=phone, address=address)
-        new_contact.save()
+        db.session.add(new_contact)
+        db.session.commit()
         return redirect(url_for('index'))
     return render_template('add_contact.html')
 
-# 🔑 Логин
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -55,7 +51,7 @@ def login():
         password = request.form['password']
         user = User.query.filter_by(username=username).first()
 
-        if user and user.check_password(password):  # Проверяем хэш пароля
+        if user and check_password_hash(user.password, password):
             login_user(user)
             return redirect(url_for('index'))
         else:
@@ -63,7 +59,6 @@ def login():
 
     return render_template('login.html')
 
-# 🚪 Выход
 @app.route('/logout')
 @login_required
 def logout():
