@@ -46,6 +46,18 @@ with app.app_context():
         db.session.add(admin)
         db.session.commit()
 
+@app.route('/delete_contact/<int:id>', methods=['GET', 'POST'])
+@login_required
+def delete_contact(id):
+    contact = Contact.query.get(id)
+    if contact:
+        db.session.delete(contact)
+        db.session.commit()
+        flash('Контакт удалён', 'success')
+    else:
+        flash('Контакт не найден', 'danger')
+    return redirect(url_for('index'))
+
 @app.route('/')
 def index():
     contacts = Contact.query.all()
@@ -87,3 +99,8 @@ def logout():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+
+#git add .  # Добавляем все изменения
+#git commit -m "Обновил код: исправил логин"
+#git push origin main  # Отправляем на сервер
