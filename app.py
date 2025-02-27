@@ -22,7 +22,8 @@ def load_user(user_id):
 with app.app_context():
     db.create_all()
     if not User.query.filter_by(username="admin").first():
-        admin = User(username="admin", password=generate_password_hash("admin_password"))
+        admin = User(username="admin")
+        admin.set_password("admin_password")  # Сохраняем пароль через метод
         db.session.add(admin)
         db.session.commit()
 

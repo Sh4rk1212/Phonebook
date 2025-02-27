@@ -7,7 +7,7 @@ db = SQLAlchemy()
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), unique=True, nullable=False)
-    password_hash = db.Column(db.String(256), nullable=False)  # Храним зашифрованный пароль
+    password_hash = db.Column(db.String(256), nullable=False)  # Было `password`, стало `password_hash`
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -21,10 +21,5 @@ class Contact(db.Model):
     phone = db.Column(db.String(20), nullable=False)
     address = db.Column(db.String(255), nullable=True)
 
-    def save(self):
-        db.session.add(self)
-        db.session.commit()
-
-    def delete(self):
-        db.session.delete(self)
-        db.session.commit()
+    def __repr__(self):
+        return f'<Contact {self.name}>'
