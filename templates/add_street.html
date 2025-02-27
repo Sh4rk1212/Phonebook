@@ -7,12 +7,13 @@
 </head>
 <body class="container mt-4">
     <h1 class="text-center">Добавить улицу</h1>
-    <form method="POST">
+
+    <form action="{{ url_for('add_street') }}" method="POST">
         <div class="mb-3">
             <label for="street_name" class="form-label">Название улицы</label>
-            <input type="text" class="form-control" id="street_name" name="street_name" required>
+            <input type="text" name="street_name" id="street_name" class="form-control" required>
         </div>
-        <button type="submit" class="btn btn-primary">Добавить улицу</button>
+        <button type="submit" class="btn btn-success">Добавить улицу</button>
     </form>
 </body>
 </html>

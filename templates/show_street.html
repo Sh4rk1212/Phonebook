@@ -8,14 +8,17 @@
 <body class="container mt-4">
     <h1 class="text-center">Дома на улице {{ street.name }}</h1>
 
+    <h2>Дома</h2>
     <ul>
         {% for house in houses %}
             <li>
-                Дом {{ house.house_number }} <a href="{{ url_for('show_house', street_id=street.id, house_id=house.id) }}" class="btn btn-info btn-sm">Посмотреть контакты</a>
+                {{ house.house_number }}
+                <a href="{{ url_for('show_house', street_id=street.id, house_id=house.id) }}" class="btn btn-info btn-sm ms-2">Посмотреть контакты</a>
             </li>
         {% endfor %}
     </ul>
 
     <a href="{{ url_for('add_house', street_id=street.id) }}" class="btn btn-primary">Добавить дом</a>
+
 </body>
 </html>

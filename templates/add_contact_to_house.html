@@ -2,11 +2,11 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Добавить контакт</title>
+    <title>Добавить контакт в дом</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="container mt-4">
-    <h1>Добавить контакт</h1>
+    <h1>Добавить контакт в дом</h1>
     <form method="POST">
         <div class="mb-3">
             <label for="name" class="form-label">Имя</label>
@@ -20,7 +20,8 @@
             <label for="address" class="form-label">Адрес</label>
             <input type="text" class="form-control" id="address" name="address" required>
         </div>
-        <button type="submit" class="btn btn-primary">Добавить контакт</button>
+        <button type="submit" class="btn btn-primary">Добавить</button>
     </form>
+    <a href="{{ url_for('index') }}" class="btn btn-secondary mt-3">Назад</a>
 </body>
 </html>
