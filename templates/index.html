@@ -17,31 +17,34 @@
     <a href="{{ url_for('add_contact') }}" class="btn btn-success mb-3">➕ Добавить контакт</a>
 
     <table class="table table-bordered">
-        <thead>
+    <thead>
+        <tr>
+            <th>ФИО</th>
+            <th>Телефон</th>
+            <th>Улица</th>
+            <th>Дом</th>  <!-- Добавлен столбец для дома -->
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for contact in contacts %}
             <tr>
-                <th>Имя</th>
-                <th>Телефон</th>
-                <th>Адрес</th>
-                <th>Действия</th>
+                <td>{{ contact.name }}</td>
+                <td>{{ contact.phone }}</td>
+                <td>{{ contact.address }}</td>
+                <td>{{ contact.house_number }}</td>  <!-- Отображаем номер дома -->
+                <td>
+                    <a href="{{ url_for('delete_contact', id=contact.id) }}" class="btn btn-danger btn-sm">❌ Удалить</a>
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            {% for contact in contacts %}
-                <tr>
-                    <td>{{ contact.name }}</td>
-                    <td>{{ contact.phone }}</td>
-                    <td>{{ contact.address }}</td>
-                    <td>
-                        <a href="{{ url_for('delete_contact', id=contact.id) }}" class="btn btn-danger btn-sm">❌ Удалить</a>
-                    </td>
-                </tr>
-            {% else %}
-                <tr>
-                    <td colspan="4" class="text-center">Контакты не найдены</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+        {% else %}
+            <tr>
+                <td colspan="5" class="text-center">Контакты не найдены</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
 
 </body>
 </html>

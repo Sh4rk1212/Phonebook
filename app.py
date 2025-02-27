@@ -27,6 +27,7 @@ class Contact(db.Model):
     name = db.Column(db.String(150), nullable=False)
     phone = db.Column(db.String(15), nullable=False)
     address = db.Column(db.String(250), nullable=False)
+    house_number = db.Column(db.String(10), nullable=True)  # Новое поле для дома
 
 # Инициализация login_manager
 login_manager = LoginManager()
@@ -58,10 +59,21 @@ def delete_contact(id):
         flash('Контакт не найден', 'danger')
     return redirect(url_for('index'))
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
-    contacts = Contact.query.all()
+    query = request.args.get('query')
+    if query:
+        # Фильтрация контактов по имени, телефону, адресу и дому
+        contacts = Contact.query.filter(
+            (Contact.name.like(f'%{query}%')) |
+            (Contact.phone.like(f'%{query}%')) |
+            (Contact.address.like(f'%{query}%')) |
+            (Contact.house_number.like(f'%{query}%'))  # Фильтрация по номеру дома
+        ).all()
+    else:
+        contacts = Contact.query.all()
     return render_template('index.html', contacts=contacts)
+
 
 @app.route('/add', methods=['GET', 'POST'])
 @login_required
@@ -70,11 +82,13 @@ def add_contact():
         name = request.form['name']
         phone = request.form['phone']
         address = request.form['address']
-        new_contact = Contact(name=name, phone=phone, address=address)
+        house_number = request.form.get('house_number')  # Получаем номер дома
+        new_contact = Contact(name=name, phone=phone, address=address, house_number=house_number)
         db.session.add(new_contact)
         db.session.commit()
         return redirect(url_for('index'))
     return render_template('add_contact.html')
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
