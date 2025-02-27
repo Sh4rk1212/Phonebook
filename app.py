@@ -113,9 +113,9 @@ def add_house(street_id):
         return redirect(url_for('show_street', street_id=street.id))
     return render_template('add_house.html', street=street)
 
-@app.route('/add_contact/<house_id>', methods=['GET', 'POST'])
+@app.route('/add_contact_to_house/<house_id>', methods=['GET', 'POST'])
 @login_required
-def add_contact(house_id):
+def add_contact_to_house(house_id):
     house = House.query.get_or_404(house_id)
     if request.method == 'POST':
         name = request.form['name']
@@ -126,6 +126,7 @@ def add_contact(house_id):
         flash('Контакт добавлен', 'success')
         return redirect(url_for('show_house', street_id=house.street_id, house_id=house.id))
     return render_template('add_contact.html', house=house)
+
 
 
 
