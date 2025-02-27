@@ -22,12 +22,23 @@ class User(UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password, password)
 
+class Street(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(150), nullable=False, unique=True)
+    houses = db.relationship('House', backref='street', lazy=True)
+
+class House(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    house_number = db.Column(db.String(10), nullable=False)
+    street_id = db.Column(db.Integer, db.ForeignKey('street.id'), nullable=False)
+    contacts = db.relationship('Contact', backref='house', lazy=True)
+
 class Contact(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(150), nullable=False)
     phone = db.Column(db.String(15), nullable=False)
     address = db.Column(db.String(250), nullable=False)
-    house_number = db.Column(db.String(10), nullable=True)  # Новое поле для дома
+    house_id = db.Column(db.Integer, db.ForeignKey('house.id'), nullable=False)
 
 # Инициализация login_manager
 login_manager = LoginManager()
@@ -60,19 +71,22 @@ def delete_contact(id):
     return redirect(url_for('index'))
 
 @app.route('/', methods=['GET', 'POST'])
+@app.route('/')
 def index():
-    query = request.args.get('query')
-    if query:
-        # Фильтрация контактов по имени, телефону, адресу и дому
-        contacts = Contact.query.filter(
-            (Contact.name.like(f'%{query}%')) |
-            (Contact.phone.like(f'%{query}%')) |
-            (Contact.address.like(f'%{query}%')) |
-            (Contact.house_number.like(f'%{query}%'))  # Фильтрация по номеру дома
-        ).all()
-    else:
-        contacts = Contact.query.all()
-    return render_template('index.html', contacts=contacts)
+    streets = Street.query.all()  # Получаем все улицы
+    return render_template('index.html', streets=streets)
+
+@app.route('/<street_id>')
+def show_street(street_id):
+    street = Street.query.get_or_404(street_id)
+    houses = street.houses  # Получаем все дома на улице
+    return render_template('street.html', street=street, houses=houses)
+
+@app.route('/<street_id>/<house_id>')
+def show_house(street_id, house_id):
+    house = House.query.get_or_404(house_id)
+    contacts = house.contacts  # Получаем все контакты для дома
+    return render_template('house.html', house=house, contacts=contacts)
 
 
 @app.route('/add', methods=['GET', 'POST'])
