@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Добавить контакт</title>
+</head>
+<body>
+    <h2>Добавление контакта</h2>
+    <form method="POST">
+        <label>Имя: <input type="text" name="name" required></label><br>
+        <label>Телефон: <input type="text" name="phone" required></label><br>
+        <label>Адрес: <input type="text" name="address" required></label><br>
+        <button type="submit">Добавить</button>
+    </form>
+    <a href="{{ url_for('index') }}">Назад</a>
+</body>
+</html>
