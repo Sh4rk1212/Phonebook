@@ -9,8 +9,8 @@
 
     <h1 class="text-center">Телефонный справочник</h1>
 
-    <form action="{{ url_for('search') }}" method="GET" class="d-flex my-3">
-        <input type="text" name="query" class="form-control me-2" placeholder="Поиск по фамилии, номеру или адресу">
+    <form action="{{ url_for('index') }}" method="GET" class="d-flex my-3">
+        <input type="text" name="query" class="form-control me-2" placeholder="Поиск по фамилии, номеру или адресу" value="{{ request.args.get('query') }}">
         <button type="submit" class="btn btn-primary">🔍 Поиск</button>
     </form>
 
@@ -34,6 +34,10 @@
                     <td>
                         <a href="{{ url_for('delete_contact', id=contact.id) }}" class="btn btn-danger btn-sm">❌ Удалить</a>
                     </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4" class="text-center">Контакты не найдены</td>
                 </tr>
             {% endfor %}
         </tbody>

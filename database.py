@@ -18,8 +18,12 @@ class User(UserMixin, db.Model):
 class Contact(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
-    phone = db.Column(db.String(20), nullable=False)
+    phone_number = db.Column(db.String(20), nullable=False)  # Используем более читаемое название
     address = db.Column(db.String(255), nullable=True)
 
     def __repr__(self):
         return f'<Contact {self.name}>'
+
+# Для улучшения производительности можно добавить индексы на поля:
+# db.Index('idx_username', User.username)
+# db.Index('idx_name', Contact.name)

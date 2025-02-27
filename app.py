@@ -2,14 +2,33 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
-from database import db, User, Contact
 
+# Инициализация приложения и базы данных
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///contacts.db'
 app.config['SECRET_KEY'] = 'your_secret_key'
 
-db.init_app(app)
+db = SQLAlchemy(app)
 
+# Модели
+class User(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(150), unique=True, nullable=False)
+    password = db.Column(db.String(150), nullable=False)
+
+    def set_password(self, password):
+        self.password = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password, password)
+
+class Contact(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(150), nullable=False)
+    phone = db.Column(db.String(15), nullable=False)
+    address = db.Column(db.String(250), nullable=False)
+
+# Инициализация login_manager
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
@@ -18,12 +37,12 @@ login_manager.login_view = 'login'
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-# Создаём таблицы и админа при запуске приложения
+# Создание базы данных и администратора
 with app.app_context():
     db.create_all()
     if not User.query.filter_by(username="admin").first():
         admin = User(username="admin")
-        admin.set_password("admin_password")  # Сохраняем пароль через метод
+        admin.set_password("admin_password")  # Создаём пароль для администратора
         db.session.add(admin)
         db.session.commit()
 
@@ -52,7 +71,7 @@ def login():
         password = request.form['password']
         user = User.query.filter_by(username=username).first()
 
-        if user and check_password_hash(user.password, password):
+        if user and user.check_password(password):
             login_user(user)
             return redirect(url_for('index'))
         else:
