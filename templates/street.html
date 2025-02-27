@@ -13,8 +13,6 @@
             <li><a href="{{ url_for('show_house', street_id=street.id, house_id=house.id) }}">Дом №{{ house.house_number }}</a></li>
         {% endfor %}
     </ul>
-</body>
-</html>
-
+    <a href="{{ url_for('add_house', street_id=street.id) }}" class="btn btn-success">Добавить дом</a>
 </body>
 </html>

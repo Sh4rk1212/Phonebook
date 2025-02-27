@@ -88,6 +88,46 @@ def show_house(street_id, house_id):
     contacts = house.contacts  # Получаем все контакты для дома
     return render_template('house.html', house=house, contacts=contacts)
 
+@app.route('/add_street', methods=['GET', 'POST'])
+@login_required
+def add_street():
+    if request.method == 'POST':
+        street_name = request.form['street_name']
+        new_street = Street(name=street_name)
+        db.session.add(new_street)
+        db.session.commit()
+        flash('Улица добавлена', 'success')
+        return redirect(url_for('index'))
+    return render_template('add_street.html')
+
+@app.route('/add_house/<street_id>', methods=['GET', 'POST'])
+@login_required
+def add_house(street_id):
+    street = Street.query.get_or_404(street_id)
+    if request.method == 'POST':
+        house_number = request.form['house_number']
+        new_house = House(house_number=house_number, street_id=street.id)
+        db.session.add(new_house)
+        db.session.commit()
+        flash('Дом добавлен', 'success')
+        return redirect(url_for('show_street', street_id=street.id))
+    return render_template('add_house.html', street=street)
+
+@app.route('/add_contact/<house_id>', methods=['GET', 'POST'])
+@login_required
+def add_contact(house_id):
+    house = House.query.get_or_404(house_id)
+    if request.method == 'POST':
+        name = request.form['name']
+        phone = request.form['phone']
+        new_contact = Contact(name=name, phone=phone, house_id=house.id)
+        db.session.add(new_contact)
+        db.session.commit()
+        flash('Контакт добавлен', 'success')
+        return redirect(url_for('show_house', street_id=house.street_id, house_id=house.id))
+    return render_template('add_contact.html', house=house)
+
+
 
 @app.route('/add', methods=['GET', 'POST'])
 @login_required

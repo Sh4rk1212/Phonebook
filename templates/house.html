@@ -13,5 +13,6 @@
             <li>{{ contact.name }} - {{ contact.phone }}</li>
         {% endfor %}
     </ul>
+    <a href="{{ url_for('add_contact', house_id=house.id) }}" class="btn btn-success">Добавить контакт</a>
 </body>
 </html>
