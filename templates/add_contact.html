@@ -4,8 +4,35 @@
     <meta charset="UTF-8">
     <title>Добавить контакт</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Фон для всей страницы */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background-color: #e0f7fa; /* Светло-голубой фон для всей страницы */
+        }
+
+        /* Фон для контейнера */
+        .container {
+            background: #ffffff; /* Белый фон для контейнера */
+            border-radius: 8px; /* Скругленные углы */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Легкая тень */
+            padding: 20px;
+            margin-top: 30px;
+        }
+                /* Логотип */
+        .logo {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 200px; /* Можно изменить размер лого */
+        }
+    </style>
 </head>
 <body class="container mt-4">
+<!-- Логотип -->
+    <img src="{{ url_for('static', filename='logo.png') }}" alt="Логотип" class="logo">
     <h1>Добавить контакт</h1>
     <form method="POST">
         <div class="mb-3">
