@@ -13,6 +13,13 @@
             background-color: #e0f7fa; /* Светло-голубой фон для всей страницы */
         }
 
+        /* Используем flexbox для корректного отображения */
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Гарантирует, что контент и подвал будут занимать всю высоту */
+        }
+
         /* Фон для контейнера */
         .container {
             background: #ffffff; /* Белый фон для контейнера */
@@ -20,26 +27,87 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Легкая тень */
             padding: 20px;
             margin-top: 30px;
+            flex: 1; /* Это заставляет контейнер занять оставшееся пространство */
         }
-                /* Логотип */
+
+        /* Логотип */
         .logo {
             position: absolute;
             top: 20px;
             left: 20px;
             width: 200px; /* Можно изменить размер лого */
         }
+
+        /* Подвал */
+        .footer {
+            background-color: #333;
+            color: #fff;
+            text-align: left;
+            padding: 10px 0;
+            font-size: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-left: 10px;
+            padding-right: 10px;
+            width: 100%;
+            margin-top: auto; /* Это закрепляет подвал внизу страницы */
+        }
+
+        .footer a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 5px;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        /* Кнопка на главную */
+        .btn-home {
+            position: fixed;
+            top: 30px; /* Расположение кнопки сверху */
+            right: 30px; /* Расположение кнопки справа */
+            background-color: #007bff;
+            color: white;
+            padding: 15px 30px; /* Увеличенный размер кнопки */
+            border-radius: 8px; /* Скругленные углы */
+            font-size: 20px; /* Увеличенный шрифт */
+            text-align: center;
+            display: inline-block;
+            text-decoration: none;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Тень для кнопки */
+        }
+
+        .btn-home:hover {
+            background-color: #0056b3;
+            text-decoration: none;
+        }
     </style>
 </head>
-<body class="container mt-4">
-<!-- Логотип -->
-    <img src="{{ url_for('static', filename='logo.png') }}" alt="Логотип" class="logo">
-    <h1 class="text-center">Добавить дом на улицу {{ street.name }}</h1>
-    <form method="POST">
-        <div class="mb-3">
-            <label for="house_number" class="form-label">Номер дома</label>
-            <input type="text" class="form-control" id="house_number" name="house_number" required>
-        </div>
-        <button type="submit" class="btn btn-primary">Добавить дом</button>
-    </form>
+<body>
+    <div class="container mt-4">
+        <!-- Логотип -->
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="Логотип" class="logo">
+        <h1 class="text-center">Добавить дом на улицу {{ street.name }}</h1>
+        <form method="POST">
+            <div class="mb-3">
+                <label for="house_number" class="form-label">Номер дома</label>
+                <input type="text" class="form-control" id="house_number" name="house_number" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Добавить дом</button>
+        </form>
+    </div>
+ <!-- Кнопка на главную -->
+    <a href="{{ url_for('index') }}" class="btn-home">На главную</a>
+    <!-- Подвал -->
+    <div class="footer">
+        <p>&copy; 2025 Телефонный справочник города Омска</p>
+        <p>
+            <a href="mailto:youremail@example.com">Email: youremail@example.com</a> |
+            <a href="tel:+79001234567">Телефон: +7 900 123-45-67</a>
+        </p>
+        <p>Адрес: г. Омск, ул. Примерная, 1</p>
+    </div>
 </body>
 </html>

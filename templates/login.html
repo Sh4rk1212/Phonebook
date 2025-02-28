@@ -82,6 +82,26 @@
         label {
             font-weight: bold;
         }
+        /* Кнопка на главную */
+        .btn-home {
+            position: fixed;
+            top: 30px; /* Расположение кнопки сверху */
+            right: 30px; /* Расположение кнопки справа */
+            background-color: #007bff;
+            color: white;
+            padding: 15px 30px; /* Увеличенный размер кнопки */
+            border-radius: 8px; /* Скругленные углы */
+            font-size: 20px; /* Увеличенный шрифт */
+            text-align: center;
+            display: inline-block;
+            text-decoration: none;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Тень для кнопки */
+        }
+
+        .btn-home:hover {
+            background-color: #0056b3;
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
@@ -106,6 +126,8 @@
             <a href="{{ url_for('index') }}">Назад</a>
         </form>
     </div>
+ <!-- Кнопка на главную -->
+    <a href="{{ url_for('index') }}" class="btn-home">На главную</a>
 
 </body>
 </html>
