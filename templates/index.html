@@ -44,11 +44,41 @@
         .card-body {
             border-radius: 8px;
         }
+
+        /* Стили для формы поиска */
+        .search-container {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-container input {
+            flex: 1;
+        }
+
+        /* Логотип */
+        .logo {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 200px; /* Можно изменить размер лого */
+        }
     </style>
 </head>
 <body>
+    <!-- Логотип -->
+    <img src="{{ url_for('static', filename='logo.png') }}" alt="Логотип" class="logo">
+
     <div class="container">
         <h1 class="text-center mb-4">Телефонный справочник города Омска</h1>
+
+        <!-- Форма поиска -->
+        <form action="{{ url_for('search') }}" method="GET" class="search-container">
+            <input type="text" name="query" class="form-control" placeholder="Введите имя или адрес">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-search"></i> Найти
+            </button>
+        </form>
 
         <div class="row">
             <!-- Список улиц с карточками -->

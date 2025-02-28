@@ -48,11 +48,36 @@ login_manager.login_view = 'login'
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-# --- ГЛАВНАЯ ---
-@app.route('/')
+# --- ГЛАВНАЯ + ПОИСК ---
+@app.route('/', methods=['GET', 'POST'])
 def index():
     streets = Street.query.all()
-    return render_template('index.html', streets=streets)
+    contacts = []
+    if request.method == 'POST':
+        search_query = request.form.get('search_query', '').strip()
+        if search_query:
+            contacts = Contact.query.filter(
+                (Contact.name.ilike(f"%{search_query}%")) |
+                (Contact.address.ilike(f"%{search_query}%"))
+            ).all()
+    return render_template('index.html', streets=streets, contacts=contacts)
+
+
+@app.route('/search', methods=['GET'])
+def search():
+    query = request.args.get('query', '').strip()
+
+    if not query:
+        flash("Введите имя или адрес для поиска!", "warning")
+        return redirect(url_for('index'))
+
+    # Поиск по имени или адресу
+    results = Contact.query.filter(
+        (Contact.name.ilike(f"%{query}%")) | (Contact.address.ilike(f"%{query}%"))
+    ).all()
+
+    return render_template('search_results.html', query=query, results=results)
+
 
 # --- ПРОСМОТР УЛИЦЫ ---
 @app.route('/<street_id>')
@@ -141,17 +166,16 @@ def add_contact_to_house(house_id):
     return render_template('add_contact_to_house.html', house_id=house_id)
 
 # --- УДАЛЕНИЕ КОНТАКТА ---
-@app.route('/delete_contact/<int:id>', methods=['POST'])
+@app.route('/delete_contact/<int:contact_id>', methods=['POST'])
 @login_required
-def delete_contact(id):
-    contact = Contact.query.get(id)
-    if contact:
-        db.session.delete(contact)
-        db.session.commit()
-        flash('Контакт удалён', 'success')
-    else:
-        flash('Контакт не найден', 'danger')
+def delete_contact(contact_id):
+    contact = Contact.query.get_or_404(contact_id)  # Проверяем, есть ли контакт
+    db.session.delete(contact)
+    db.session.commit()
+    flash('Контакт удалён', 'success')
+
     return redirect(url_for('index'))
+
 
 # --- АВТОРИЗАЦИЯ ---
 @app.route('/login', methods=['GET', 'POST'])
