@@ -70,10 +70,6 @@
             color: #fff;
             text-align: left;
             padding: 5px 0;  /* Уменьшен padding */
-            position: fixed;
-            left: 0;
-            bottom: 0;
-            width: 100%;
             font-size: 12px; /* Меньший шрифт */
             display: flex;
             justify-content: space-between; /* Распределение элементов слева направо */
@@ -92,13 +88,18 @@
             text-decoration: underline;
         }
 
+        /* Чтобы подвал не перекрывал кнопку */
+        .content-wrapper {
+            padding-bottom: 50px; /* Добавим отступ снизу для размещения подвала */
+        }
+
     </style>
 </head>
 <body>
     <!-- Логотип -->
     <img src="{{ url_for('static', filename='logo.png') }}" alt="Логотип" class="logo">
 
-    <div class="container">
+    <div class="container content-wrapper">
         <h1 class="text-center mb-4">Телефонный справочник города Омска</h1>
 
         <!-- Форма поиска -->
